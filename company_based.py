@@ -1,5 +1,6 @@
 ## Company based Analysis
 
+from common_fns import *
 import pandas as pd
 from tkinter import *
 import numpy as np
@@ -146,6 +147,34 @@ def company_based(layer,loc):
     entry_btn.grid(row=0,column=4)
 
     layer.mainloop()
-    
 
+
+def check_company(c):
+  
+
+def company_window(top,root):
+  root.withdraw()
+  top.resizable(0,0)
+  top.title("Company Based Analysis")
+  # label = Label(top, text="CBA").pack()
+  
+
+  backbtn = Button(top, text="<==", command=lambda: back_fn(top,root))
+  backbtn.place(anchor='nw', width='50', x='0', y='0')
+
+  top.protocol("WM_DELETE_WINDOW",root.destroy)
+  # label2 = Label(top, text=root.filename).pack()
+
+  # Company Name Label
+  cnamelabel = Label(top, text= "Enter Company Name: ")
+  cnamelabel.configure(font='{} 12 {italic}')
+  cnamelabel.place(anchor='w', relx='0.05', rely='0.2', x='0', y='0')
+
+  # Company Name Entry Box
+  cname = Entry(top)
+  cname.place(anchor='w', relx='0.38', rely='0.2', width='200', height = '35', x='0', y='0')
+
+  # Browse Button
+  searchbtn = Button(top, text="Search", command =lambda: check_company(cname.get()))
+  searchbtn.place(anchor='w', height='35', relx='0.38', rely='0.3', width='100', x='0', y='0')
 

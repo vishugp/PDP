@@ -1,3 +1,4 @@
+from common_fns import *
 from tkinter import *
 from tkinter import messagebox
 from PIL import ImageTk, Image
@@ -27,67 +28,43 @@ def dbselect():
     fileloctext.insert('0', root.filename)
 
 def analysis_opt(k):
-    top2 = Toplevel()
-    print(basis[k])
-    top2.title(basis[k])
-    top2.geometry("800x600")
-    
+    top = new_window(basis[k],windgeom)
 
     if k==0:
-        company_based(top2,root)
+        company_window(top,root)
+        # browsebtn.config(state = NORMAL)
     elif k==1:
-        product_based(top2, root)
+        product_window(top, root)
     elif k==2:
-        time_based(top2,root)
+        time_window(top,root)
     elif k==3:
-        emp_based(top2,root)
-
-def back(top):
-    top.destroy()
-    root.deiconify()
-    browsebtn.config(state = NORMAL)
-
-def open(z):
-    root.withdraw()
-    top = Toplevel()
-    top.geometry(windgeom)
-    top.resizable(0,0)
-    top.title(basis[z]+" Analysis")
-    label = Label(top, text=basis[z] + " Analysis")
-    # root.deiconify()
-
-    backbtn = Button(top, text="<==", command=lambda: back(top))
-    backbtn.place(anchor='nw', width='50', x='0', y='0')
-    top.protocol("WM_DELETE_WINDOW",root.destroy)
-    # cbtn = Button(top, text=analysis[0], command=lambda:[top.destroy(), analysis_opt(0)])
-    # pbtn = Button(top, text=analysis[1], command=lambda:[top.destroy(), analysis_opt(1)])
-    # tbtn = Button(top, text=analysis[2], command=lambda:[top.destroy(), analysis_opt(2)])
-    # ebtn = Button(top, text=analysis[3], command=lambda:[top.destroy(), analysis_opt(3)])
+        emp_window(top,root)
 
 def anal():
     for i in analist.curselection():
         z = i
         opt = analist.get(i)
-    flag1 = 0
+    
+
     # Selected Option
     if browsebtn['state']== NORMAL:
         messagebox.showwarning("Database File Error", "Please Select the Database File!")
 
     else: 
-        try:
+        # try:
             opt+=" ANALYSIS"
             opt=opt.upper()
             msgtext = "Database file: \n" + root.filename + "\nAnalysis type: \n" + opt
             final = messagebox.askyesno("Options?",msgtext)
             if final == True:
-                open(z)
+                r = analysis_opt(z)
             else:
                 browsebtn.configure(state=NORMAL)
 
             # sel_anal.configure(text=opt)
-            flag1=1
-        except:
-            messagebox.showinfo("Select Analysis Type","Please Select the type of Analysis to be performed from the given List!")
+            
+        # except:
+            # messagebox.showinfo("Select Analysis Type","Please Select the type of Analysis to be performed from the given List!")
             
 
     
@@ -95,7 +72,7 @@ def anal():
 def check_file(filenama):
     if filenama=="":
         messagebox.showerror("File not Selected","Please Select Database File")
-    # print(filenama)
+    
     
 
     # Entry Box Checker
@@ -114,6 +91,7 @@ def check_file(filenama):
             browsebtn.config(state = DISABLED)
     
 def analysis_list():
+
     # Analysis Option
     opt_anal = Label(root, text= "Choose the type of analysis: ")
     opt_anal.configure(font='{} 12 {italic}')
@@ -138,10 +116,16 @@ def analysis_list():
 
 
 if __name__ == '__main__':
+
+    ### Main Page ###
+
     ## Heading
     welcome = Label(root, text = "Welcome to PDP Sales Analysis!", fg = 'blue')
     welcome.place(anchor='center', relx='0.5', rely='0.1', x='0', y='0')
     welcome.configure(font='{} 21 {bold underline}')
+
+
+
 
     # File Location Label
     dbsel = Label(root, text= "Enter Database FilePath: ")
@@ -151,7 +135,6 @@ if __name__ == '__main__':
     # File Location Entry Box
     fileloctext = Entry(root)
     fileloctext.place(anchor='w', relx='0.38', rely='0.3', width='350', height = '35', x='0', y='0')
-
 
     # File Format Label
     errortext = "Please select file with .xlsx format"
