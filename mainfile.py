@@ -32,13 +32,14 @@ def analysis_opt(k):
 
     if k==0:
         company_window(top,root)
-        # browsebtn.config(state = NORMAL)
     elif k==1:
         product_window(top, root)
     elif k==2:
         time_window(top,root)
     elif k==3:
         emp_window(top,root)
+
+    browsebtn.config(state = NORMAL)
 
 def anal():
     for i in analist.curselection():
