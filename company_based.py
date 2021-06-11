@@ -5,6 +5,11 @@ import pandas as pd
 from tkinter import messagebox
 from tkinter import *
 import numpy as np
+from tkinter import ttk
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+
 
 def name_analysis(i,zn):
   print("\nCompany No.",zn,"in the list is:")
@@ -47,77 +52,204 @@ def name_analysis(i,zn):
 
   print(dash)
 
-def result(top,cname,plist,elist):
-  print("LOL")
-def more_opts(root,top,cname):
+
+def result(top1,root,cname):
+  top1.withdraw()
+  # root.deiconify()
+  res = new_window("RESULTS","1920x1080")
+  res.wm_protocol("WM_DELETE_WINDOW",lambda: [res.destroy(),top1.deiconify()])  
+
+  cnametext = "Company Name: " + cname
+  cnamelabel = Label(res, text= cnametext)
+  cnamelabel.configure(font='{} 10 {bold}')
+  cnamelabel.place(anchor='w', x='10', y='10')
+
+  plistsel = list()
+  elistsel = list()
+  ptext = "Product type(s) Selected: "
+  etext = "Employees dealing  with this customer: "
+
+  try:
+    if pbtn['state']==DISABLED:
+      for i in plistbox.curselection():
+        p = plistbox.get(i)
+        plistsel.append(p)
+      pplist = plistsel
+    else:
+      pplist = plist
+  except:
+    pplist = plist
+  for i in range(len(pplist)-1):
+    ptext = ptext + pplist[i] + ", "
+  ptext += pplist[-1]
+
+  pnamelabel = Label(res, text= ptext)
+  pnamelabel.configure(font='{} 10 {bold}')
+  pnamelabel.place(anchor='w',  x='10', y='30')
+
+  tree = ttk.Treeview(res)
+  scrllbr = ttk.Scrollbar(res , command=tree.yview)
+  tree.place(anchor='nw',x='850',y='20',height='150',width='1001')
+  scrllbr.place(anchor='nw',x='1851',y='20',width='20',height='150')
+  tree.configure(xscrollcommand=scrllbr.set)
+
+  indices = [8,3,5,6,9,1,7]
+  collist = list()
+  for i in range(len(indices)):
+    collist.append(i+1)
+  tree["columns"] = collist
+  tree["show"] = 'headings'
 
   cindex = company_list.index(cname)
+  for i in range(len(indices)):
+    tree.column(i+1, width = 143, anchor='c')
+    tree.heading(i+1,text= pdp[cindex][1][indices[i]])
+
+  nsales = int(pdp[cindex][0][2])
+  print(nsales)
+  for i in range(nsales):
+    row = list()
+    for j in range(len(indices)):
+      data = pdp[cindex][2+i][indices[j]]
+      if indices[j] == 1:
+        data = data[:10]
+      row.append(data)
+    tree.insert("",'end', values=row)
+
+  pcount = [0]*len(pplist)
+  for i in range(nsales):
+    for j in pplist:
+      if pdp[cindex][2+i][8]== j:
+        pcount[pplist.index(j)]+=1
+  for i in pcount:
+    i= (i/nsales)*100
+  fig1, ax1 = plt.subplots()
+  ax1.pie(pcount, labels=pplist, autopct='%1.1f%%',startangle=90)
+  ax1.axis('equal')
+  plt.plot()
+
+  canvas = FigureCanvasTkAgg(fig1,master = res) 
+  canvas.draw()
+  # placing the canvas on the Tkinter window
+  canvas.get_tk_widget().place(x='500',y='500')
+  # creating the Matplotlib toolbar
+  toolbar = NavigationToolbar2Tk(canvas,res)
+  toolbar.update()
+  
+    # placing the toolbar on the Tkinter window
+  canvas.get_tk_widget().place(x='100',y='500')
+
+  try:
+    if ebtn['state']==DISABLED:
+      for i in elistbox.curselection():
+        e = elistbox.get(i)
+        elistsel.append(e)
+      eelist = elistsel
+    else:
+      eelist = elist
+  except:
+    eelist = elist
+  for i in range(len(eelist)-1):
+    etext = etext + eelist[i] + ", "
+  etext += eelist[-1]
+
+  enamelabel = Label(res, text= etext)
+  enamelabel.configure(font='{} 10 {bold}')
+  enamelabel.place(anchor='w' ,x='10', y='50')
+
+ 
+  
+
+  
+
+  for i in elistbox.curselection():
+    e = elistbox.get(i)
+    elistsel.append(e)
+
+  
 
 
-  plabel = Label(top, text="Select Product Type(s):")
-  plabel.place(anchor='w', relx='0.15', rely='0.4', x='0', y='0')
-  plist = list()
-  for i in range(int(pdp[cindex][0][2])):
-    p = pdp[cindex][i+2][8]
-    p = p.upper()
-    pdp[cindex][i+2][8] = p
-    if p not in plist:
-      plist.append(p)
-  # print(plist)
-  plistbox = list_maker(top,plist,len(plist) )
+
+def more_opts(root,top1,cname):
+
+  plabel = Label(top1, text="Select Product Type(s):")
+  plabel.place(anchor='nw', x='25', y='275',height="25")
+  global plistbox
+  plistbox = list_maker(top1,plist,5 )
   plistbox['selectmode'] = "multiple"
-  plistbox.place(anchor='w', relx='0.15', rely='0.5', x='0', y='0')
+  plistbox.place(anchor='nw', x='25', y='300')
+  global pbtn
+  pbtn = Button(top1, text="Enter ✓",fg="green",command=lambda:check_sel(plistbox,pbtn))
+  pbtn.place(anchor='nw', height='25', width='75', x='125', y='400')
 
 
-  elabel = Label(top, text="Select Employee(s):")
-  elabel.place(anchor='w', relx='0.65', rely='0.4', x='0', y='0')
-  elist = list()
-  for i in range(int(pdp[cindex][0][2])):
-    e = pdp[cindex][i+2][7]
-    e = e.upper()
-    pdp[cindex][i+2][7] = e
-    if e not in elist:
-      elist.append(e)
-  print(elist)
-  elistbox = list_maker(top,elist ,len(elist))
+  elabel = Label(top1, text="Select Employee(s):")
+  elabel.place(anchor='nw',x='250', y='275')
+  global elistbox
+  elistbox = list_maker(top1,elist ,5)
   elistbox['selectmode'] = "multiple"
-  elistbox.place(anchor='w', relx='0.65', rely='0.5', x='0', y='0')
+  elistbox.place(anchor='nw', x='250', y='300')
+  global ebtn
+  ebtn = Button(top1, text="Enter ✓",fg="green",command=lambda: check_sel(elistbox,ebtn))
+  ebtn.place(anchor='nw', height='25', width='75', x='350', y='400')
 
 
-
-def get_cname(root,top):
+def get_cname(root,top1):
   cname = ""
   for i in clist.curselection():
     z=i
     cname = clist.get(i)
 
   if cname!="":
+    cindex = company_list.index(cname)
+
+    
+    global plist
+    plist = list()
+    global elist
+    elist = list()
+
+    
+    
+    for i in range(int(pdp[cindex][0][2])):
+      p = pdp[cindex][i+2][8]
+      p = p.upper()
+      pdp[cindex][i+2][8] = p
+      if p not in plist:
+        plist.append(p)
+    print(plist)
+
+    for i in range(int(pdp[cindex][0][2])):
+      e = pdp[cindex][i+2][7]
+      e = e.upper()
+      pdp[cindex][i+2][7] = e
+      if e not in elist:
+        elist.append(e)
+    print(elist)
+
     cbtn.configure(state = DISABLED)
     searchbtn.configure(state=DISABLED)
 
-    moptbtn = Button(top, text="More Options", command=lambda: more_opts(root,top,cname))
-    moptbtn.place(anchor="w", relx ='0.8',rely = '0.3' )
+    moptbtn = Button(top1, text="More Options", command=lambda: more_opts(root,top1,cname))
+    moptbtn.place(anchor="w", x ='630',y = '210',height='50' )
     
 
-    cnamedisp = Label(top, text =cname)
-    cnamedisp.configure(font='{} 9 {italic}',fg ="blue")
-    cnamedisp.place(anchor="w", relx ='0.8',rely = '0.25' )
+    cnamedisp = Label(top1, text =cname)
+    cnamedisp.configure(font='{} 8 {italic}',fg ="purple")
+    cnamedisp.place(anchor="w", x ='665',y = '150',height="50")
     
-    resultbtn = Button(top, text="Results")
-    resultbtn.place(anchor='w', height='70', relx='0.8', rely='0.9', width='100', x='0', y='0')
+    resultbtn = Button(top1, text="Results",bg = "green" , fg = "white",command=lambda:result(top1,root,cname))
+    resultbtn.place(anchor='w', height='70', x='675', y='550', width='100')
 
 
   else:
     errormsg = messagebox.showwarning("No Company Selected!","Please Select a Company Name from the ListBox!")
-    
-
-  
 
   print(cname)
   
 
 
-def check_company(n,top,root):
+def check_company(n,top1,root):
   flag1 = 0
   n = n.upper()
   z=0
@@ -142,22 +274,22 @@ def check_company(n,top,root):
     possible_names.sort()
     
     global clist
-    clist = list_maker(top,possible_names,5)
-    clist.place(anchor='w', relx='0.56', rely='0.25', x='0', y='0')
+    clist = list_maker(top1,possible_names,5)
+    clist.place(anchor='nw', x='435', y='80',width='225')
 
     global cbtn
-    cbtn = Button(top, text="Enter",command=lambda: get_cname(root,top))
-    cbtn.place(anchor="w", relx ='0.8',rely = '0.2' )
+    cbtn = Button(top1, text="Enter",command=lambda: get_cname(root,top1))
+    cbtn.place(anchor="w", x = '670',y='100', width = "100", height = "25" )
 
     print(clist.curselection)
     
    
-  exlabel = Label(top, text=checkcase)
+  exlabel = Label(top1, text=checkcase)
   exlabel.configure(font='{} 12 {bold}', fg=casecolor, bg = "white")
-  exlabel.place(anchor='w', height='30', relx='0.51', rely='0.2', width='30', x='0', y='0')
+  exlabel.place(anchor='w', height='30', width='30', x='385', y='100')
 
   
-def company_window(top,root):
+def company_window(top1,root):
   global pdp
   pdp = database_maker(root.filename,2)
    
@@ -179,28 +311,28 @@ def company_window(top,root):
 
 
   root.withdraw()
-  top.resizable(0,0)
-  top.title("Company Based Analysis")
-  # label = Label(top, text="CBA").pack()
+  top1.resizable(0,0)
+  top1.title("Company Based Analysis")
+  # label = Label(top1, text="CBA").pack()
   
 
-  backbtn = Button(top, text="<==", command=lambda: back_fn(top,root))
+  backbtn = Button(top1, text="<==", command=lambda: back_fn(top1,root))
   backbtn.place(anchor='nw', width='50', x='0', y='0')
 
-  top.protocol("WM_DELETE_WINDOW",root.destroy)
-  # label2 = Label(top, text=root.filename).pack()
+  top1.protocol("WM_DELETE_WINDOW",root.destroy)
+  # label2 = Label(top1, text=root.filename).pack()
 
   # Company Name Label
-  cnamelabel = Label(top, text= "Enter Company Name: ")
-  cnamelabel.configure(font='{} 12 {italic}')
-  cnamelabel.place(anchor='w', relx='0.01', rely='0.2', x='0', y='0')
+  cnamelabel = Label(top1, text= "Enter Company Name: ")
+  cnamelabel.configure(font='{} 10 {bold}')
+  cnamelabel.place(anchor='w', x='5', y='100')
 
   # Company Name Entry Box
-  cname = Entry(top)
-  cname.place(anchor='w', relx='0.3', rely='0.2', width='200', height = '35', x='0', y='0')
+  cname = Entry(top1)
+  cname.place(anchor='w', width='200', height = '40', x='225', y='100')
 
   # Search Button
   global searchbtn
-  searchbtn = Button(top, text="Search", command =lambda: check_company(cname.get(),top,root))
-  searchbtn.place(anchor='w', height='30', relx='0.3', rely='0.27', width='200', x='0', y='0')
+  searchbtn = Button(top1, text="Search", command =lambda: check_company(cname.get(),top1,root))
+  searchbtn.place(anchor='w', height='30', width='200', x='225', y='150')
 

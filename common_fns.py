@@ -1,15 +1,16 @@
 from tkinter import *
+from tkinter import messagebox
 import numpy as np
 import pandas as pd
 
 def back_fn(top,root):
-    top.destroy()
+    top.withdraw()
     root.deiconify()
     # btn_fnl.config(state = wutstate)
 
 def new_window(title,geom):
     window = Toplevel()
-    print(title)
+    # print(title)
     window.title(title)
     window.geometry(geom)
     return window
@@ -95,7 +96,16 @@ def list_maker(window, list_opts, listsize):
     for i in range(len(list_opts)):
         list.insert(i,list_opts[i])
     return list
-        
 
-            
+def disabler(feature):
+    feature['state']=DISABLED
 
+def check_sel(listbox,btn):
+    a= list()
+    for i in listbox.curselection():
+        a.append(listbox.get(i))
+    if len(a)==0:
+        errormsg = messagebox.showwarning("Select an option!","Please Select an option from the list before hitting the Enter Button!!!!!")
+    else:
+        disabler(listbox)
+        disabler(btn)
