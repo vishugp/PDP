@@ -47,45 +47,45 @@ def name_analysis(i,zn):
 
   print(dash)
 
-def submit(compname):
-    n = compname.get()
-    n = n.upper()
-    z=0
-    for j in company_list:
-        if (n in j) and (j.index(n)==0 or j[j.index(n)-1]==" "):
-            z+=1
-            i = company_list.index(j)
-            name_analysis(i,z)
-    if (z==0):
-        print("Company with the word '",n,"' is not in the list!")
+def result(top,cname,plist,elist):
+  print("LOL")
+def more_opts(root,top,cname):
 
-def company_based(layer,loc):
-    print("Company Based Analysis")
-    fileloc = loc.filename
-    create_df(fileloc)
-
-    compname = StringVar()
-
-    name_label = Label(layer, text="Enter the Company Name")
-    comp_name = Entry(layer, 
-                    textvariable= compname,
-                    font=('calibre',10, 'bold')
-                        )
-    entry_btn =  Button(layer, text = "Enter", command =lambda: submit(compname))
-
-    name_label.grid(row=0,column=0)
-    comp_name.grid(row=0,column=2)
-    entry_btn.grid(row=0,column=4)
-
-    layer.mainloop()
+  cindex = company_list.index(cname)
 
 
-def more_opts(top,root):
-  top.destroy()
-  root.destroy()
+  plabel = Label(top, text="Select Product Type(s):")
+  plabel.place(anchor='w', relx='0.15', rely='0.4', x='0', y='0')
+  plist = list()
+  for i in range(int(pdp[cindex][0][2])):
+    p = pdp[cindex][i+2][8]
+    p = p.upper()
+    pdp[cindex][i+2][8] = p
+    if p not in plist:
+      plist.append(p)
+  # print(plist)
+  plistbox = list_maker(top,plist,len(plist) )
+  plistbox['selectmode'] = "multiple"
+  plistbox.place(anchor='w', relx='0.15', rely='0.5', x='0', y='0')
+
+
+  elabel = Label(top, text="Select Employee(s):")
+  elabel.place(anchor='w', relx='0.65', rely='0.4', x='0', y='0')
+  elist = list()
+  for i in range(int(pdp[cindex][0][2])):
+    e = pdp[cindex][i+2][7]
+    e = e.upper()
+    pdp[cindex][i+2][7] = e
+    if e not in elist:
+      elist.append(e)
+  print(elist)
+  elistbox = list_maker(top,elist ,len(elist))
+  elistbox['selectmode'] = "multiple"
+  elistbox.place(anchor='w', relx='0.65', rely='0.5', x='0', y='0')
+
+
 
 def get_cname(root,top):
-
   cname = ""
   for i in clist.curselection():
     z=i
@@ -95,7 +95,7 @@ def get_cname(root,top):
     cbtn.configure(state = DISABLED)
     searchbtn.configure(state=DISABLED)
 
-    moptbtn = Button(top, text="More Options", command=lambda: more_opts(root,top))
+    moptbtn = Button(top, text="More Options", command=lambda: more_opts(root,top,cname))
     moptbtn.place(anchor="w", relx ='0.8',rely = '0.3' )
     
 
@@ -128,7 +128,7 @@ def check_company(n,top,root):
       z+=1
       possible_names.append(j)
       i = company_list.index(j)
-      name_analysis(i,z)
+      # name_analysis(i,z)
   if (z==0):
     flag1=0
     checkcase = "✗"
@@ -142,7 +142,7 @@ def check_company(n,top,root):
     possible_names.sort()
     
     global clist
-    clist = list_maker(top,possible_names)
+    clist = list_maker(top,possible_names,5)
     clist.place(anchor='w', relx='0.56', rely='0.25', x='0', y='0')
 
     global cbtn

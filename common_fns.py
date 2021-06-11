@@ -41,7 +41,7 @@ def database_maker(fileloc,key):
     cols = list()
     for i in df.columns:
         cols.append(i)
-    # print(cols)
+    print(cols)
 
     pdp = np.empty([1000,100,len(cols)], dtype = "<U20")
     # print(pdp.shape)
@@ -86,12 +86,12 @@ def database_maker(fileloc,key):
     
 
 
-def list_maker(window, list_opts):
+def list_maker(window, list_opts, listsize):
     # if len(list_opts)<5:
     #     listsize = len(list_opts)
     # else:
     #     listsize = 5
-    list = Listbox(window, height = 5, font = '{} 8 {bold}', selectmode=BROWSE)
+    list = Listbox(window, height = listsize, font = '{} 8 {bold}', selectmode=BROWSE)
     for i in range(len(list_opts)):
         list.insert(i,list_opts[i])
     return list

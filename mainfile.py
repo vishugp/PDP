@@ -11,7 +11,7 @@ from product_based import *
 from time_based import *
 from emp_based import *
 
-basis = ['Company based','Product type based','Time Dependent','Employee based']
+basis = ['Company based','Product type based','Employee based']
 flag1 = 0
 windgeom = "800x600"
 root = Tk()
