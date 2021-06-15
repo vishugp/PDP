@@ -9,6 +9,7 @@ from tkinter import ttk
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+import math
 
 
 def name_analysis(i,zn):
@@ -54,139 +55,144 @@ def name_analysis(i,zn):
 
 def result_display(cname, top1, root,frame, k):
   print("LOL")
-  # # top1.withdraw()
-  # # root.deiconify()
-  # # res = new_window("RESULTS","1920x1080")
-  # # res.configure(bg='white')
-  # # res.wm_protocol("WM_DELETE_WINDOW",lambda: [res.destroy(),top1.deiconify()])  
+  # top1.withdraw()
+  # root.deiconify()
+  # res = new_window("RESULTS","1920x1080")
+  # res.configure(bg='white')
+  # res.wm_protocol("WM_DELETE_WINDOW",lambda: [res.destroy(),top1.deiconify()])  
 
+  info = LabelFrame(frame,text="SELECTED OPTIONS")
+  info.pack(fill='x',padx=5)
   # frame.grid(row=k,column=k,padx=10,pady=5)
   # framebg = frame['bg']
 
   # cnametext = "Company Name: " + cname
   # cnamelabel = Label(frame, text= cnametext, bg=framebg)
   # cnamelabel.configure(font='{} 10 {bold}')
-  # # cnamelabel.place(anchor='w', x='10', y='10')
-  # # cnamelabel.grid(row =0,column=0, padx=20, pady=5)
+  # cnamelabel.place(anchor='w', x='10', y='10')
+  # cnamelabel.grid(row =0,column=0, padx=20, pady=5)
   # cnamelabel.pack()
 
-  # plistsel = list()
-  # elistsel = list()
-  # ptext = "Product type(s) Selected: "
-  # etext = "Employees dealing  with this customer: "
+  plistsel = list()
+  elistsel = list()
+  ptext = "Product type(s) Selected: "
+  etext = "Employees dealing  with this customer: "
 
-  # try:
-  #   if pbtn['state']==DISABLED:
-  #     for i in plistbox.curselection():
-  #       p = plistbox.get(i)
-  #       plistsel.append(p)
-  #     pplist = plistsel
-  #   else:
-  #     pplist = plist
-  # except:
-  #   pplist = plist
-  # for i in range(len(pplist)-1):
-  #   ptext = ptext + pplist[i] + ", "
-  # print(pplist)
-  # ptext += pplist[-1]
+  try:
+    if pbtn['state']==DISABLED:
+      for i in plistbox.curselection():
+        p = plistbox.get(i)
+        plistsel.append(p)
+      pplist = plistsel
+    else:
+      pplist = plist
+  except:
+    pplist = plist
+  for i in range(len(pplist)-1):
+    ptext = ptext + pplist[i] + ", "
+  print(pplist)
+  ptext += pplist[-1]
 
-  # pnamelabel = Label(frame, text= ptext,bg=framebg)
-  # pnamelabel.configure(font='{} 10 {bold}')
-  # # pnamelabel.place(anchor='w',  x='10', y='30')
-  # pnamelabel.pack()
-
-
-  # try:
-  #   if ebtn['state']==DISABLED:
-  #     for i in elistbox.curselection():
-  #       e = elistbox.get(i)
-  #       elistsel.append(e)
-  #     eelist = elistsel
-  #   else:
-  #     eelist = elist
-  # except:
-  #   eelist = elist
-  # for i in range(len(eelist)-1):
-  #   etext = etext + eelist[i] + ", "
-  # etext += eelist[-1]
-
-  # enamelabel = Label(frame, text= etext,bg=framebg)
-  # enamelabel.configure(font='{} 10 {bold}')
-  # # enamelabel.place(anchor='w' ,x='10', y='50')
-  # enamelabel.pack()
+  pnamelabel = Label(info, text= ptext)
+  pnamelabel.configure(font='{} 10 {bold}')
+  # pnamelabel.place(anchor='w',  x='10', y='30')
+  pnamelabel.pack(padx=10,pady=10)
 
 
-  # tree = ttk.Treeview(frame)
-  # # scrllbr = ttk.Scrollbar(frame , command=tree.yview)
-  # # tree.place(anchor='nw',x='850',y='20',height='150',width='1001')
-  # tree.pack(pady=10)
-  # # # scrllbr.place(anchor='nw',x='1851',y='20',width='20',height='150')
-  # # scrllbr.pack()
-  # # tree.configure(xscrollcommand=scrllbr.set)
+  try:
+    if ebtn['state']==DISABLED:
+      for i in elistbox.curselection():
+        e = elistbox.get(i)
+        elistsel.append(e)
+      eelist = elistsel
+    else:
+      eelist = elist
+  except:
+    eelist = elist
+  for i in range(len(eelist)-1):
+    etext = etext + eelist[i] + ", "
+  etext += eelist[-1]
 
-  # indices = [8,3,5,6,9,1,7]
-  # collist = list()
-  # for i in range(len(indices)):
-  #   collist.append(i+1)
-  # tree["columns"] = collist
-  # tree["show"] = 'headings'
+  enamelabel = Label(info, text= etext)
+  enamelabel.configure(font='{} 10 {bold}')
+  # enamelabel.place(anchor='w' ,x='10', y='50')
+  enamelabel.pack(padx=10)
 
-  # cindex = company_list.index(cname)
-  # for i in range(len(indices)):
-  #   tree.column(i+1, width = 140, anchor='c')
-  #   tree.heading(i+1,text= pdp[cindex][1][indices[i]])
+  sales = LabelFrame(frame,text="SALES")
+  sales.pack(fill='x',padx=5)
+  tree = ttk.Treeview(sales,height=5)
+  # scrllbr = ttk.Scrollbar(frame , command=tree.yview)
+  # tree.place(anchor='nw',x='850',y='20',height='150',width='1001')
+  tree.pack(pady=10)
+  # scrllbr.place(anchor='nw',x='1851',y='20',width='20',height='150')
+  # scrllbr.pack()
+  # tree.configure(xscrollcommand=scrllbr.set)
 
-  # nsales = int(pdp[cindex][0][2])
-  # print(nsales)
-  # for i in range(nsales):
-  #   row = list()
-  #   for j in range(len(indices)):
-  #     data = pdp[cindex][2+i][indices[j]]
-  #     if indices[j] == 1:
-  #       data = data[:10]
-  #     row.append(data)
-  #   tree.insert("",'end', values=row)
+  indices = [8,3,5,6,9,1,7]
+  collist = list()
+  for i in range(len(indices)):
+    collist.append(i+1)
+  tree["columns"] = collist
+  tree["show"] = 'headings'
 
-  # pcount = [0]*len(plist)
-  # for i in range(nsales):
-  #   for j in plist:
-  #     if pdp[cindex][2+i][8]== j:
-  #       pcount[plist.index(j)]+= int(pdp[cindex][2+i][5][:-2])
-  # for i in pcount:
-  #   i= (i/sum(pcount))*100
-  # explode = [0]*len(plist)
-  # if pplist != plist:
-  #   for i in pplist:
-  #     if i in pplist:
-  #       # print('sliced')
-  #       explode[plist.index(i)]=0.5
+  cindex = company_list.index(cname)
+  for i in range(len(indices)):
+    tree.column(i+1, width = math.floor(framew/len(indices)), anchor='c')
+    tree.heading(i+1,text= pdp[cindex][1][indices[i]])
+
+  nsales = int(pdp[cindex][0][2])
+  print(nsales)
+  for i in range(nsales):
+    row = list()
+    for j in range(len(indices)):
+      data = pdp[cindex][2+i][indices[j]]
+      if indices[j] == 1:
+        data = data[:10]
+      row.append(data)
+    tree.insert("",'end', values=row)
 
 
 
+  pcount = [0]*len(plist)
+  for i in range(nsales):
+    for j in plist:
+      if pdp[cindex][2+i][8]== j:
+        pcount[plist.index(j)]+= int(pdp[cindex][2+i][5][:-2])
+  for i in pcount:
+    i= (i/sum(pcount))*100
+  explode = [0]*len(plist)
+  if pplist != plist:
+    for i in pplist:
+      if i in pplist:
+        # print('sliced')
+        explode[plist.index(i)]=0.5
 
 
-  # graph1label =Label(frame, text = "PRODUCT SALES PIE CHART",bg=framebg)
-  # graph1label.configure(font='{} 12 {bold}')
-  # # # graph1label.place(anchor='nw',x='150',y='270')
-  # graph1label.pack(pady=10)
+  g1 = LabelFrame(frame,width = framew/6,height=framew/6,text="Graph 1")
+  g1.pack(side=LEFT,padx=5)
+  graph1label =Label(g1, text = "PRODUCT SALES PIE CHART")
+  graph1label.configure(font='{} 10 {bold}')
+  # # graph1label.place(anchor='nw',x='150',y='270')
+  graph1label.pack()
 
-  # fig1, ax1 = plt.subplots()
-  # ax1.pie(pcount,explode=explode, labels=plist, autopct='%1.1f%%',startangle=90)
-  # ax1.axis('equal')
-  # plt.plot()
+  fig1, ax1 = plt.subplots()
+  ax1.pie(pcount,explode=explode, labels=plist, autopct='%1.1f%%',startangle=90, pctdistance=1.1,labeldistance=1.3)
+  plt.legend(plist, loc="best" )
+  ax1.axis('equal')
+  plt.plot()
 
-  # graph1 = FigureCanvasTkAgg(fig1,master = frame) 
-  # graph1.draw()
-  # # # placing the graph1 on the Tkinter window
-  # # # graph1.get_tk_widget().place(anchor='nw',x='100',y='300',width=750,height=750)
-  # graph1.get_tk_widget().pack()
-  # # # creating the Matplotlib toolbar
-  # toolbar = NavigationToolbar2Tk(graph1,frame)
-  # toolbar.update()
+  graph1 = FigureCanvasTkAgg(fig1,master = g1) 
+  graph1.draw()
+  # # placing the graph1 on the Tkinter window
+  # # graph1.get_tk_widget().place(anchor='nw',x='100',y='300',width=750,height=750)
+  graph1.get_tk_widget().pack()
+  # # creating the Matplotlib toolbar
+  toolbar = NavigationToolbar2Tk(graph1,g1)
+  toolbar.update()
   
-  # #   # placing the toolbar on the Tkinter window
-  # # # graph1.get_tk_widget().place(anchor='nw',x='100',y='300',width=750,height=750)
-  # graph1.get_tk_widget().pack()
+  #   # placing the toolbar on the Tkinter window
+  # # graph1.get_tk_widget().place(anchor='nw',x='100',y='300',width=750,height=750)
+  graph1.get_tk_widget().pack()
 
   
 
@@ -194,23 +200,44 @@ def result_display(cname, top1, root,frame, k):
 def result(top1,root,cname1,cname2):
   top1.withdraw()
   # root.deiconify()
+  global w,h,framew,frameh
+  cname2 = "SWASTIK"
+  # cname2=""
   if cname2=="":
-    framegeom="800x600"
+    w=1440
+    h=810
+    framew = w-30
+    frameh =h
+    filler = "both"
   else:
-    framegeom="1920x1080"
-  res = new_window("RESULTS","1920x1080")
+    w=1920
+    # h=1080
+    h=1010
+    framew = w/2 - 30
+    frameh = h
+    filler  ="y"
+  
+  resgeom = str(w)+ "x" + str(h)
+  res = new_window("RESULTS",resgeom)
+  res.resizable(0,0)
   # res.configure(bg='white')
   res.wm_protocol("WM_DELETE_WINDOW",lambda: [res.destroy(),top1.deiconify()])  
 
   
-  frame1= LabelFrame(res, width=940, height=1080, bg="darkgrey",borderwidth=1)
-  frame1.pack(side=LEFT,padx=10,pady=10)
-  vscrlbr = Scrollbar(frame1, orient='vertical')
-  vscrlbr.pack(side=CENTER,fill=Y)
-  frame2= LabelFrame(res, width=940, height=1080, bg="darkgrey",borderwidth=1)
-  frame2.pack(side=RIGHT,expand="yes",padx=10,pady=10)
-  
+  framebg = "grey"
+
+  frame1= LabelFrame(res, width=framew ,height=frameh,relief="sunken",borderwidth=2,text=cname1)
+  frame1.pack(side=LEFT,expand=FALSE,fill=filler,padx=10,pady=10)
+  vscrlbr = Scrollbar(res, orient='vertical')
+  vscrlbr.pack(side=LEFT,expand=FALSE,fill=Y)
   result_display(cname1,res,root,frame1,0)
+
+  if cname2!="":
+    frame2= LabelFrame(res, width=framew, height=frameh,relief="sunken",borderwidth=2,text=cname2)
+    frame2.pack(side=RIGHT,fill=filler,expand="yes",padx=10,pady=10)
+    result_display(cname2,res,root,frame2,0)
+  
+  
 
 def more_opts(root,top1,cname):
 
@@ -280,7 +307,7 @@ def get_cname(root,top1):
     cnamedisp.configure(font='{} 8 {italic}',fg ="purple")
     cnamedisp.place(anchor="w", x ='665',y = '150',height="50")
     
-    cname2=""
+    cname2="Company 2"
     resultbtn = Button(top1, text="Results",bg = "green" , fg = "white",command=lambda:result(top1,root,cname1,cname2))
     resultbtn.place(anchor='w', height='70', x='675', y='550', width='100')
 
