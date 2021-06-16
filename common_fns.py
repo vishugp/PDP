@@ -6,6 +6,7 @@ import pandas as pd
 def back_fn(top,root):
     top.withdraw()
     root.deiconify()
+    
     # btn_fnl.config(state = wutstate)
 
 def new_window(title,geom):
@@ -44,7 +45,7 @@ def database_maker(fileloc,key):
         cols.append(i)
     print(cols)
 
-    pdp = np.empty([1000,100,len(cols)], dtype = "<U20")
+    pdp = np.empty([1000,1000,len(cols)], dtype = "<U20")
     # print(pdp.shape)
 
     for j in range(len(dataset.sheet_names)-1):
@@ -83,6 +84,7 @@ def database_maker(fileloc,key):
     pdp[0][0][0] = int(len(m_entity))
     # for i in range(int(pdp[0][0][2]) +2):
     #     print(pdp[0][i])
+    print(m_entity)
     return pdp
     
 
