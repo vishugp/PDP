@@ -84,7 +84,7 @@ def database_maker(fileloc,key):
     pdp[0][0][0] = int(len(m_entity))
     # for i in range(int(pdp[0][0][2]) +2):
     #     print(pdp[0][i])
-    print(m_entity)
+    # print(m_entity)
     return pdp
     
 
@@ -111,3 +111,7 @@ def check_sel(listbox,btn):
     else:
         disabler(listbox)
         disabler(btn)
+
+def destroyer(widget_list):
+    for widget in widget_list:
+        widget.destroy()
