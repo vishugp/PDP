@@ -94,7 +94,7 @@ def list_maker(window, list_opts, listsize):
     #     listsize = len(list_opts)
     # else:
     #     listsize = 5
-    list = Listbox(window, height = listsize, font = '{} 8 {bold}', selectmode=BROWSE)
+    list = Listbox(window, width=25,height = listsize, font = '{} 8 {bold}', selectmode=BROWSE)
     for i in range(len(list_opts)):
         list.insert(i,list_opts[i])
     return list

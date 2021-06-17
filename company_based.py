@@ -197,8 +197,7 @@ def result_display(cname, top1, root,frame, k):
   graph1.get_tk_widget().pack()
 
   
-
-def result(top1,root,cname1,cname2):
+def result(top1,root,cname):
   top1.withdraw()
   # root.deiconify()
   global w,h,framew,frameh
@@ -227,70 +226,76 @@ def result(top1,root,cname1,cname2):
   
   framebg = "grey"
 
-  frame1= LabelFrame(res, width=framew ,height=frameh,relief="sunken",borderwidth=2,text=cname1)
+  frame1= LabelFrame(res, width=framew ,height=frameh,relief="sunken",borderwidth=2,text=cname[k])
   frame1.pack(side=LEFT,expand=FALSE,fill=filler,padx=10,pady=10)
   vscrlbr = Scrollbar(res, orient='vertical')
   vscrlbr.pack(side=LEFT,expand=FALSE,fill=Y)
-  result_display(cname1,res,root,frame1,0)
+  result_display(cname[k],res,root,frame1,0)
 
   if cname2!="":
     frame2= LabelFrame(res, width=framew, height=frameh,relief="sunken",borderwidth=2,text=cname2)
     frame2.pack(side=RIGHT,fill=filler,expand="yes",padx=10,pady=10)
-    result_display(cname2,res,root,frame2,0)
-  
-  
-
-def more_opts(root,top1,cname):
-
-  plabel = Label(top1, text="Select Product Type(s):")
-  plabel.place(anchor='nw', x='25', y='275',height="25")
-  global plistbox
-  plistbox = list_maker(top1,plist,5 )
-  plistbox['selectmode'] = "multiple"
-  plistbox.place(anchor='nw', x='25', y='300')
-  global pbtn
-  pbtn = Button(top1, text="Enter ✓",fg="green",command=lambda:check_sel(plistbox,pbtn))
-  pbtn.place(anchor='nw', height='25', width='75', x='125', y='400')
+    result_display(cname2,res,root,frame2,0)  
 
 
-  elabel = Label(top1, text="Select Employee(s):")
-  elabel.place(anchor='nw',x='250', y='275')
-  global elistbox
-  elistbox = list_maker(top1,elist ,5)
-  elistbox['selectmode'] = "multiple"
-  elistbox.place(anchor='nw', x='250', y='300')
-  global ebtn
-  ebtn = Button(top1, text="Enter ✓",fg="green",command=lambda: check_sel(elistbox,ebtn))
-  ebtn.place(anchor='nw', height='25', width='75', x='350', y='400')
+def more_opts(root,top1,cname1):
 
+  # clist[0].destroy()
+  # cbtn[k].destroy()
+  # moptbtn.destroy()
+  global k
+  k=1
+  company_input(top1,root)
+  # plabel = Label(top1, text="Select Product Type(s):")
+  # plabel.place(anchor='nw', x='25', y='275',height="25")
+  # global plistbox
+  # plistbox = list_maker(top1,plist,5 )
+  # plistbox['selectmode'] = "multiple"
+  # plistbox.place(anchor='nw', x='25', y='300')
+  # global pbtn
+  # pbtn = Button(top1, text="Enter ✓",fg="green",command=lambda:check_sel(plistbox,pbtn))
+  # pbtn.place(anchor='nw', height='25', width='75', x='125', y='400')
+
+
+  # elabel = Label(top1, text="Select Employee(s):")
+  # elabel.place(anchor='nw',x='250', y='275')
+  # global elistbox
+  # elistbox = list_maker(top1,elist ,5)
+  # elistbox['selectmode'] = "multiple"
+  # elistbox.place(anchor='nw', x='250', y='300')
+  # global ebtn
+  # ebtn = Button(top1, text="Enter ✓",fg="green",command=lambda: check_sel(elistbox,ebtn))
+  # ebtn.place(anchor='nw', height='25', width='75', x='350', y='400')
 
 
 def get_cname(root,top1):
-  cname1 = ""
-  for i in clist.curselection():
+  
+  cname.append("")
+  for i in clist[k].curselection():
     z=i
-    cname1 = clist.get(i)
+    cname[k] = clist[k].get(i)
 
-  if cname1!="":
-    cindex = company_list.index(cname1)
+  if cname[k]!="":
+    cindex = company_list.index(cname[k])
 
-    cbtn.configure(state = DISABLED)
-    searchbtn.configure(state=DISABLED)
+    cbtn[k].configure(state = DISABLED)
+    searchbtn[k].configure(state=DISABLED)
 
-    moptbtn = Button(name_input, text="More Options", command=lambda: more_opts(root,top1,cname1))
+    global moptbtn
+    moptbtn = Button(name_input[k], text="More Options", command=lambda: more_opts(root,top1,cname[k]))
     # moptbtn.place(anchor="w", x ='630',y = '210',height='50' )
     moptbtn.grid(column=3,row=1,padx=10)
     
 
-    cnamedisp = Label(name_input, text =cname1)
-    cnamedisp.configure(font='{} 12 {italic}',fg ="green")
+    cnamedisp = Label(name_input[k], text =cname[k])
+    cnamedisp.configure(font='{} 12 {italic}',fg ="blue")
     # cnamedisp.place(anchor="w", x ='665',y = '150',height="50")
     cnamedisp.grid(column=3,row=0,padx=10)
     
     cname2="Company 2"
-    resultbtn = Button(top1, text="Results",bg = "green" , fg = "white",command=lambda:result(top1,root,cname1,cname2))
+    resultbtn = Button(top1, text="Results",bg = "green" , fg = "white",command=lambda:result(top1,root,cname))
     resultbtn.place(anchor='w', height='70', x='675', y='550', width='100')
-    
+
     global plist
     plist = list()
     global elist
@@ -320,10 +325,11 @@ def get_cname(root,top1):
   else:
     errormsg = messagebox.showwarning("No Company Selected!","Please Select a Company Name from the ListBox!")
 
-  print(cname1)
+  print(cname[k])
   
 
 def check_company(n,top1,root):
+  print("Checking for the company...")
   flag1 = 0
   n = n.upper()
   z=0
@@ -347,25 +353,58 @@ def check_company(n,top1,root):
     casecolor = "green"
     possible_names.sort()
     
-    global clist
-    clist = list_maker(name_input,possible_names,5)
+    print(possible_names)
+    clist = list_maker(name_input[k],possible_names,5)
     # clist.place(anchor='nw', x='435', y='80',width='225')
-    clist.configure(width=25)
-    clist.grid(row=1,column=1,pady=5)
+    # if k==0:
+    clist[0].grid(row=1,column=1,pady=5)
+    # if k==1:
+    #   clist[1].place(anchor='nw', x='435', y='80',width='225')
+    # clist[k].pack()
+    print("Made List")
 
-    global cbtn
-    cbtn = Button(name_input, text="Enter",command=lambda: get_cname(root,top1))
-    # cbtn.place(anchor="w", x = '670',y='100', width = "100", height = "25" )
-    cbtn.grid(column=2,row=1,padx=10)
-
-    print(clist.curselection)
     
-   
-  exlabel = Label(top1, text=checkcase)
-  exlabel.configure(font='{} 12 {bold}', fg=casecolor, bg = "white")
-  exlabel.place(anchor='w', height='20', width='20', x='4250', y='105')
+    cbtn.append( Button(name_input[k], text="Enter",command=lambda: get_cname(root,top1)))
+    # cbtn.place(anchor="w", x = '670',y='100', width = "100", height = "25" )
+    cbtn[k].grid(column=2,row=1,padx=10)
+    print("Button Set")
 
+    print(clist[k].curselection)
+    
   
+  exlabel.append( Label(top1, text=checkcase))
+  exlabel[k].configure(font='{} 12 {bold}', fg=casecolor, bg = "white")
+  exlabel[k].place(anchor='w', height='20', width='20', x='4250', y='105')
+
+
+def company_input(top1,root):
+  print("Starting Company Input")
+  clabeln = 'Company Name'
+  if k==1:
+    clabeln = "Company "+str(k+1)+" Name "
+  name_input.append(LabelFrame(top1, text=clabeln,height=100) )
+  name_input[k].pack(fill='x',padx=20,pady=10)
+  
+  # Company Name Label
+  print("Label Set")
+  cnamelabel.append(Label(name_input[k], text= "Enter Company Name: "))
+  cnamelabel[k].configure(font='{} 10 {italic}')
+  # cnamelabel.place(anchor='w', x='5', y='100')
+  cnamelabel[k].grid(row=0,column=0,padx=5,pady=10)
+
+  # Company Name Entry Box
+  
+  cnamee.append(Entry(name_input[k],width=20) )
+  # cname.place(anchor='w', width='200', height = '40', x='225', y='100')
+  cnamee[k].grid(row=0,column=1,padx=5)
+  print("Entry Box Set")
+  # Search Button
+  searchbtn.append(Button(name_input[k], text="Search", command =lambda: check_company(cnamee[k].get(),top1,root)))
+  # searchbtn.place(anchor='w', height='30', width='200', x='225', y='150')
+  searchbtn[k].grid(row=0,column=2,padx=3)
+  print("Searchbtn Set")
+
+
 def company_based(top1,root):
   
   global pdp
@@ -403,25 +442,30 @@ def company_based(top1,root):
   analtypelabel = Label(top1, text="COMPANY BASED ANALYSIS",fg="red")
   analtypelabel.configure(font='{} 14 {bold underline}')
   analtypelabel.pack(pady=10)
+ 
+  global k
+  k=0
+
+  global cnamelabel
+  cnamelabel = []
+  global cname
+  cname = []
+  global searchbtn
+  searchbtn = []
+  global clist
+  clist = []
+  global cbtn
+  cbtn = []
+  global cnamee
+  cnamee = []
+  global exlabel
+  exlabel = []
+  print("Global Variables Set!")
+
 
   global name_input
-  name_input = LabelFrame(top1, text="Company Name",height=100)
-  name_input.pack(fill='x',padx=20,pady=10)
+  name_input = []
+  company_input(top1,root)
 
-  # Company Name Label
-  cnamelabel = Label(name_input, text= "Enter Company Name: ")
-  cnamelabel.configure(font='{} 10 {italic}')
-  # cnamelabel.place(anchor='w', x='5', y='100')
-  cnamelabel.grid(row=0,column=0,padx=5,pady=10)
-
-  # Company Name Entry Box
-  cname = Entry(name_input,width=20)
-  # cname.place(anchor='w', width='200', height = '40', x='225', y='100')
-  cname.grid(row=0,column=1,padx=5)
-
-  # Search Button
-  global searchbtn
-  searchbtn = Button(name_input, text="Search", command =lambda: check_company(cname.get(),top1,root))
-  # searchbtn.place(anchor='w', height='30', width='200', x='225', y='150')
-  searchbtn.grid(row=0,column=2,padx=3)
+  
 

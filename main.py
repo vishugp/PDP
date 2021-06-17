@@ -1,3 +1,4 @@
+from opt_settings import settings
 from common_fns import *
 from tkinter import *
 from tkinter import messagebox
@@ -33,16 +34,17 @@ def dbselect():
     fileloctext.insert('0', root.filename)
 
 def analysis_opt(k):
-    top = new_window(basis[k],windgeom)
-
-    if k==0:
-        company_based(top,root)
-    elif k==1:
-        product_based(top, root)
-    elif k==2:
-        emp_based(top,root)
-    elif k==3:
-        time_window(top,root)
+    alist = ['Company','Product','Employee']
+    aindex = [2,8,7]
+    settings(root,alist,aindex,k)
+    # if k==0:
+    #     company_based(top,root)
+    # elif k==1:
+    #     product_based(top, root)
+    # elif k==2:
+    #     emp_based(top,root)
+    # elif k==3:
+    #     time_window(top,root)
         
     root.withdraw()
     analysis.destroy()
@@ -138,7 +140,7 @@ def analysis_list():
 
     # Selected option
     global sel_anal
-    sel_anal = Label(analysis, text="",fg="green")
+    sel_anal = Label(analysis, text="",fg="red")
     sel_anal.configure(font='{} 8 {bold}')
     # sel_anal.place(anchor='w', relx='0.02', rely='0.8', x='0', y='0')
     sel_anal.grid(column=1,row=1,pady=10)
