@@ -115,3 +115,8 @@ def check_sel(listbox,btn):
 def destroyer(widget_list):
     for widget in widget_list:
         widget.destroy()
+
+def fdestroyer(root,k):
+    if(len(root.winfo_children())-1>k):
+        while(len(root.winfo_children())>k):
+            root.winfo_children()[k+1].destroy()
