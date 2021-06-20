@@ -72,12 +72,6 @@ def more_opt():
         #     print(elist)
     
 
-    
-
-
-
-
-
 def get_name():
 
     names.append("")
@@ -112,10 +106,8 @@ def get_name():
     print(" Selected Company is ",names[nlen-1])
 
 
-
-
-
-def check_n(n):
+def check_n():
+    n= n_entry.get()
     n=n.upper()
     flag = 0
     check_flag = ""
@@ -167,11 +159,14 @@ def name_input(c):
     header.configure(font='{} 10 {italic}')
     header.grid(row=0,column=0,padx=5,pady=10)
 
+    global n_entry
     n_entry = Entry( n_input, width=20)
+    # n_entry.bind("<Return>",check_n())
     n_entry.grid(row=0,column=1,padx=5)
+    
 
     global ent_btn
-    ent_btn = Button(n_input, text="Search", command=lambda: check_n(n_entry.get()))
+    ent_btn = Button(n_input, text="Search", command=lambda: check_n())
     ent_btn.grid(row=0,column=2,padx=3)
 
 
