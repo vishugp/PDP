@@ -117,6 +117,6 @@ def destroyer(widget_list):
         widget.destroy()
 
 def fdestroyer(root,k):
-    if(len(root.winfo_children())-1>k):
+    if( (len(root.winfo_children())-1) > k):
         while(len(root.winfo_children())>k):
-            root.winfo_children()[k+1].destroy()
+            root.winfo_children()[k].destroy()
