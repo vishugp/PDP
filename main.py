@@ -7,6 +7,8 @@ from tkinter import messagebox
 import os
 
 
+def comparison():
+    print("DONT LEL PLOX")
 
 def more_opt():
     o = mo.get()
@@ -15,7 +17,15 @@ def more_opt():
 
     if o==True:
         print("More Options to be added!")
-    
+
+        more_frame = ttk.LabelFrame(root,text="More Options")
+        more_frame.grid(row=5,column=0)
+        comp = tk.BooleanVar(value=False)
+        compare = ttk.Checkbutton(more_frame, text="Compare between 2 "+s+"'s ?", variable=comp, command=lambda:comparison())
+        compare.grid(padx= 1,row=0,column=0,sticky = "nsew")
+
+
+
 
 
 
@@ -27,7 +37,9 @@ def more_options(event):
     global mo
     mo = tk.BooleanVar(value=False)
     more_opns = ttk.Checkbutton(root, text="More Options?",variable=mo,command=more_opt)
-    more_opns.grid(padx= 1,row=3,column=0,sticky = "nsew")
+    more_opns.grid(padx= 1,row=4,column=0,sticky = "nsew")
+
+    
 
 
 
@@ -54,9 +66,10 @@ def name_input(value):
     opt = anal.get()
     global s
     s = opt.split(" ")[0]
+    
     name_frame = ttk.LabelFrame(root, text=s.upper() +" NAME")
     # name_frame.pack(fill='x',padx=(20, 20), pady=(20, 10))
-    name_frame.grid(row=2, column=0, padx=(20, 10), pady=10, sticky="nsew")
+    name_frame.grid(row=3, column=0, padx=(20, 10), pady=10, sticky="nsew")
 
     name_label = ttk.Label(name_frame, text= "Select the "+s+" Name: ")
     name_label.configure(font='{} 12 {italic}')
@@ -103,10 +116,14 @@ def name_input(value):
 def analysis():
     # filecombo['state']=DISABLED
     # browsebtn['state']=DISABLED
-    fdestroyer(root,1)
+    
+
+    
+    fdestroyer(root,2)
+    
     anal_frame = ttk.Labelframe(root, text= "ANALYSIS TYPE")
     # anal_frame.pack(fill='x',padx=(20, 20), pady=(20, 10))
-    anal_frame.grid(row=1, column=0, padx=(20, 10), pady=10, sticky="nsew")
+    anal_frame.grid(row=2, column=0, padx=(20, 10), pady=10, sticky="nsew")
 
     anal_label = ttk.Label(anal_frame, text= "Choose the type of analysis: ")
     anal_label.configure(font='{} 12 {italic}')
@@ -138,6 +155,7 @@ def check_xlsx(index, value, op):
 
     if filepath[-4:] != "xlsx":
         messagebox.showerror("Invalid file Format","Please provide database file with '.xlsx' file format!")
+        filecombo.set("")
     else:
         analysis()
 
@@ -176,15 +194,19 @@ style = ttk.Style(root)
 style.theme_use("azure")
 
 
+
 ## MAIN PAGE 
-# welcome = ttk.Label(root, text="Welcome to PDP Sales Analysis!",foreground="#007fff")
-# welcome.configure(font='{} 21 {bold underline}')
-# # welcome.pack(pady=10)
-# welcome.grid(row=0,column=0)
+welcome = ttk.Label(root, text="Welcome to PDP Sales Analysis!",foreground="#007fff")
+welcome.configure(font='{} 21 {bold underline}')
+# welcome.pack(pady=10)
+welcome.grid(row=0, column=0)
+
+
+
 
 fileframe = ttk.LabelFrame(root, text="DATABASE FILEPATH", padding=(20,10))
 # fileframe.pack(fill='x',padx=(20, 20), pady=(20, 10))
-fileframe.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew")
+fileframe.grid(row=1, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew")
 
 # File Location Label
 dbsel = ttk.Label(fileframe, text= "Enter Database fileframe: ")
@@ -221,8 +243,9 @@ filecombo.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
 browsebtn = ttk.Button(fileframe, text="BROWSE",command=lambda: dbselect(filecombo),style="AccentButton")
 browsebtn.grid(row=0, column=2, padx=5, pady=10, sticky="nsew")
 # browsebtn.pack(side='left',padx=20,pady=10)
+fdestroyer(root,1)
 
-fdestroyer(root,0)
+
 # Center the window, and set minsize
 root.update()
 print(root.winfo_width(),root.winfo_height())
