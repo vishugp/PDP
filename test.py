@@ -2,7 +2,8 @@ from analysis_settings import analysis
 from tkinter.constants import DISABLED
 from common_fns import database_maker, fdestroyer
 import tkinter as tk
-from tkinter import Entry, ttk
+from PIL import ImageTk, Image
+from tkinter import Entry, PhotoImage, ttk
 from tkinter import filedialog
 from tkinter import messagebox
 import os
@@ -51,6 +52,9 @@ global root
 root=tk.Tk()
 root.title("PDP SALES ANALYSIS")
 root.option_add("*tearOff", False) 
+pic = PhotoImage(file = 'pdplogo.png')
+# root.iconbitmap(r'pdplogo.ico')
+root.iconphoto(False, pic)
 
 
 

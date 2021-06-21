@@ -9,11 +9,13 @@ def comparison():
 def more_opt():
     o = mo.get()
     if o==False:
-        fdestroyer(analmf,2)
+        fdestroyer(nbook,1)
 
     if o==True:
         print("More Options to be added!")
         extra_opts(r,nbook)
+
+        
         
 
 
@@ -32,6 +34,12 @@ def more_options(event):
     more_opns = ttk.Checkbutton(analmf, text="More Options?",variable=mo,command=more_opt)
     # more_opns.grid(padx= 1,row=4,column=0,sticky = "nsew")
     more_opns.pack(pady=25,padx=20)
+
+    res = ttk.Button(analmf, text = "RESULTS", style="AccentButton")
+    res.pack(pady=20)
+
+    r.minsize(r.winfo_width(), r.winfo_height())
+    r.update()
 
     
 
@@ -145,5 +153,12 @@ def analysis(root,nb,f):
     menu = ttk.OptionMenu(anal_frame, anal,"Select Analysis Type",*anal_opt,command=name_input)
     menu.configure(width=30)
     menu.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
+
+    root.update()
+    print(root.winfo_width(),root.winfo_height())
+    root.minsize(root.winfo_width(),root.winfo_height())
+    x_cordinate = int((root.winfo_screenwidth()/2) - (root.winfo_width()/2))
+    y_cordinate = int((root.winfo_screenheight()/2) - (root.winfo_height()/2))
+    root.geometry("+{}+{}".format(x_cordinate, y_cordinate))
 
     
