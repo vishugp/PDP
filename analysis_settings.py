@@ -1,31 +1,56 @@
 from tkinter import ttk
 import tkinter as tk
 from common_fns import *
-from add_ons import*
+# from add_ons import*
 
-def comparison():
-    print("DONT LEL PLOX")
+def extra_opts():
+    more_set  =ttk.Label(nbook)
+    nbook.add(more_set,text="More Options")
+    nbook.select(2)
+    res.pack_forget()
+    # #getting screen width and height of display
+    # width= root.winfo_screenwidth() 
+    # height= root.winfo_screenheight()
+    # #setting tkinter root size
+    # root.geometry("%dx%d" % (width, height))
+
+    global pdf
+    pdp = database_maker(filepath,aindex[ent.index(s)])
+
+    global entity_list
+    entity_list = list()
+    global count_list
+    count_list = list()
+    global keys
+    keys = list()
+    global names
+    names = []
+
+    for i in range(int(pdp[0][0][0])):
+        entity_list.append(pdp[i][0][1])
+        count_list.append(int(pdp[i][0][2]))
+    
+    for i in pdp[0][1]:
+        keys.append(i)
+
+    res2 = ttk.Button(more_set,text="RESULTS",style="AccentButton")
+    res2.pack()
 
 def more_opt():
     o = mo.get()
     if o==False:
         fdestroyer(nbook,1)
+        res.pack()
 
     if o==True:
         print("More Options to be added!")
-        extra_opts(r,nbook)
-
-        
-        
-
-
-
-
+        extra_opts()
 
 
 def more_options(event):
     # entry['state']=DISABLED
     fdestroyer(analmf,1)
+    global a
     a = entry.get()
     print(s," Name: ",a)
 
@@ -35,6 +60,7 @@ def more_options(event):
     # more_opns.grid(padx= 1,row=4,column=0,sticky = "nsew")
     more_opns.pack(pady=25,padx=20)
 
+    global res
     res = ttk.Button(analmf, text = "RESULTS", style="AccentButton")
     res.pack(pady=20)
 
@@ -75,8 +101,9 @@ def name_input(value):
     # name_frame.grid(row=3, column=0, padx=(20, 10), pady=10, sticky="nsew")
 
     name_label = ttk.Label(name_frame, text= "Select the "+s+" Name: ")
-    name_label.configure(font='{} 12 {italic}')
+    name_label.configure(font='{} 13 {italic}')
     name_label.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
+    global aindex
     aindex = [2,8,7]
 
     global pdf
@@ -140,7 +167,7 @@ def analysis(root,nb,f):
     # anal_frame.grid(row=2, column=0, padx=(20, 10), pady=10, sticky="nsew")
 
     anal_label = ttk.Label(anal_frame, text= "Choose the type of analysis: ")
-    anal_label.configure(font='{} 12 {italic}')
+    anal_label.configure(font='{} 13 {italic}')
     anal_label.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
 
 

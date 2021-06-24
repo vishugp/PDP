@@ -38,6 +38,7 @@ def database_maker(fileloc,key):
 
     m_entity = list()
     counts = list()
+    # total = list()
     # indices = [8,3,5,6,9,1,7]
 
     cols = list()
@@ -58,18 +59,18 @@ def database_maker(fileloc,key):
             if entity == "NAN":
                 continue
 
-            
-
             if entity not in m_entity:
                 m_entity.append(entity)
                 counts.append(1)
-                pdp[m_entity.index(entity)][0][1] = entity
+                # total.append(df[cols[i]][6])
+                pdp[m_entity.index(entity)][0][1] = entity #Keeping Name in [0,1]
+                # pdp[m_entity.index(entity)][0][3] = int(df[cols[i]][6])
                 for k in range(len(cols)):
-                    pdp[m_entity.index(entity)][1][k] = cols[k]
-
-
+                    pdp[m_entity.index(entity)][1][k] = cols[k] #Setting the colunmn index
             else:
                 counts[m_entity.index(entity)]+=1
+                # total[m_entity.index(entity)]+=int(df[cols[i]][6])
+                # pdp[m_entity.index(entity)][0][3] += int(df[cols[i]][6])
 
 
             cindex = m_entity.index(entity)

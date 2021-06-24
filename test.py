@@ -7,7 +7,214 @@ from tkinter import Entry, PhotoImage, ttk
 from tkinter import filedialog
 from tkinter import messagebox
 import os
+from common_fns import *
+import math
 
+def results():
+    print("RESULTS")
+    resf = ttk.Frame(notebook)
+    notebook.add(resf,text="Analysis Results")
+    notebook.select(len(notebook.winfo_children())-1)
+    # print(notebook.winfo_children())
+    # notebook.select('Analysis Results')
+
+
+    resnb = ttk.Notebook(resf)
+    resnb.pack(expand=True, fill="both", padx=5, pady=5)
+
+    sheet = ttk.Frame(resnb)
+    sheet.pack(expand=True, fill="both", padx=5, pady=5)
+
+    namalab = ttk.Label(sheet, text=s +" Name: "+nama)
+    namalab.pack()
+    
+    resnb.add(sheet,text="All Sales")
+    
+    treescroll = ttk.Scrollbar(sheet)
+    tree = ttk.Treeview(sheet, yscrollcommand=treescroll.set)
+    treescroll.config(command=tree.yview)
+
+    indices = [8,3,5,6,9,1,7]
+    collist = list()
+    for i in range(len(indices)):
+        collist.append(i+1)
+    tree["columns"] = collist
+    tree["show"] = 'headings'
+
+    nindex = entity_list.index(nama)
+    for i in range(len(indices)):
+        tree.column(i+1, width = math.floor(root.winfo_width()/len(indices)), anchor = 'c')
+        tree.heading(i+1,text = keys[indices[i]])
+
+    c = count_list[nindex]
+    print(c)
+    for i in range(c):
+        row = list()
+        for j in range(len(indices)):
+            data = pdp[nindex][2+i][indices[j]]
+            if indices[j]:
+                data = data[:10]    #Time Setting
+            row.append(data)
+        tree.insert("",'end',values=row)
+
+    
+    treescroll.pack(side="right", fill="y")
+    tree.pack(expand=True, fill="both")
+
+
+
+
+def extra_opts():
+    more_set  =ttk.Label(notebook)
+    notebook.add(more_set,text="More Options")
+    notebook.select(2)
+    res.pack_forget()
+    # #getting screen width and height of display
+    # width= root.winfo_screenwidth() 
+    # height= root.winfo_screenheight()
+    # #setting tkinter root size
+    # root.geometry("%dx%d" % (width, height))
+
+    res2 = ttk.Button(more_set,text="RESULTS",style="AccentButton",command=lambda: results())
+    res2.pack()
+
+def more_opt():
+    o = mo.get()
+    if o==False:
+        fdestroyer(notebook,1)
+        res.pack()
+
+    if o==True:
+        print("More Options to be added!")
+        extra_opts()
+
+
+def more_options(event):
+    # entry['state']=DISABLED
+    fdestroyer(analmf,1)
+    global nama
+    nama = entry.get()
+    print(s," Name: ",nama)
+
+    global mo
+    mo = tk.BooleanVar(value=False)
+    more_opns = ttk.Checkbutton(analmf, text="More Options?",variable=mo,command=more_opt)
+    # more_opns.grid(padx= 1,row=4,column=0,sticky = "nsew")
+    more_opns.pack(pady=25,padx=20)
+
+    global res
+    res = ttk.Button(analmf, text = "RESULTS", style="AccentButton",command=lambda:results())
+    res.pack(pady=20)
+
+    root.minsize(root.winfo_width(), root.winfo_height())
+    root.update()
+
+    
+
+
+
+
+def check_name(event):
+    print("Checking..")
+    
+    n = entry.get()
+    n = n.upper()
+    print(n)
+    poss = []
+    for j in entity_list:
+        if (n in j) and (j.index(n)==0 or j[j.index(n)-1]==" "):
+            poss.append(j)
+            i = entity_list.index(j)
+    entry['values']=poss
+    entry.event_generate('<Down>')
+    # entry.focus()
+
+
+def name_input(value):
+    fdestroyer(analmf,0)
+    # menu['state']=DISABLED
+    global opt
+    opt = anal.get()
+    global s
+    s = opt.split(" ")[0]
+    
+    name_frame = ttk.LabelFrame(analmf, text=s.upper() +" NAME")
+    name_frame.pack(pady=25,padx=20)
+    # name_frame.grid(row=3, column=0, padx=(20, 10), pady=10, sticky="nsew")
+
+    name_label = ttk.Label(name_frame, text= "Select the "+s+" Name: ")
+    name_label.configure(font='{} 13 {italic}')
+    name_label.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
+    global aindex
+    aindex = [2,8,7]
+
+    global pdp
+    pdp = database_maker(filepath,aindex[ent.index(s)])
+
+    global entity_list
+    entity_list = list()
+    global count_list
+    count_list = list()
+    global keys
+    keys = list()
+    global names
+    names = []
+
+    for i in range(int(pdp[0][0][0])):
+        entity_list.append(pdp[i][0][1])
+        count_list.append(int(pdp[i][0][2]))
+    
+    for i in pdp[0][1]:
+        keys.append(i)
+    # print(entity_list)
+    root.bind('<Return>',check_name)
+    global entry
+    ename = tk.StringVar()
+    
+    entry = ttk.Combobox(name_frame,textvariable=ename,width=25)
+    
+    # # ename.trace('w',check_name)
+    # analmf.minsize(analmf.winfo_width(), analmf.winfo_height())
+    
+    entry['values']=entity_list
+    # filecombo['state']= "readonly"
+    entry.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
+    entry.bind('<<ComboboxSelected>>',more_options)
+
+    
+
+
+
+def analysis():
+    # filecombo['state']=DISABLED
+    # browsebtn['state']=DISABLED
+    global analmf
+    analmf = ttk.Frame(notebook)
+    notebook.add(analmf,text="Analysis Settings")
+    notebook.select(1)
+    
+    anal_frame = ttk.Labelframe(analmf, text= "ANALYSIS TYPE")
+    anal_frame.pack(pady=25,padx=20)
+    # anal_frame.grid(row=2, column=0, padx=(20, 10), pady=10, sticky="nsew")
+
+    anal_label = ttk.Label(anal_frame, text= "Choose the type of analysis: ")
+    anal_label.configure(font='{} 13 {italic}')
+    anal_label.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
+
+
+    global anal 
+    anal = tk.StringVar()
+
+    anal_opt = ["Company Based Analysis","Product Based Analysis","Employee Based Analysis"]
+    
+    global menu
+    menu = ttk.OptionMenu(anal_frame, anal,"Select Analysis Type",*anal_opt,command=name_input)
+    menu.configure(width=30)
+    menu.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
+
+    
+
+    
 
 
 def check_xlsx(index, value, op):
@@ -27,7 +234,7 @@ def check_xlsx(index, value, op):
         filecombo.set("")
     else:
         fdestroyer(notebook,0)
-        analysis(root,notebook,filepath)
+        analysis()
         
         
         
@@ -93,7 +300,7 @@ fileframe.pack(pady=25,padx=20)
 
 # File Location Label
 dbsel = ttk.Label(fileframe, text= "Enter Database fileframe: ")
-dbsel.configure(font='{azure} 12 {italic}')
+dbsel.configure(font='{azure} 13 {italic}')
 dbsel.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
 # dbsel.pack(side='left',padx=100,pady=10)
 
