@@ -1,3 +1,4 @@
+from numpy.core.fromnumeric import shape
 from analysis_settings import analysis
 from tkinter.constants import DISABLED
 from common_fns import database_maker, fdestroyer
@@ -9,6 +10,9 @@ from tkinter import messagebox
 import os
 from common_fns import *
 import math
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 
 def results():
     print("RESULTS")
@@ -34,7 +38,11 @@ def results():
     tree = ttk.Treeview(sheet, yscrollcommand=treescroll.set)
     treescroll.config(command=tree.yview)
 
-    indices = [8,3,5,6,9,1,7]
+    ind = [2,8,7,5,6,3,9,1]
+    indices = []
+    for i in ind:
+        if i!=aindex[ent.index(s)]:
+            indices.append(i)
     collist = list()
     for i in range(len(indices)):
         collist.append(i+1)
@@ -45,21 +53,70 @@ def results():
     for i in range(len(indices)):
         tree.column(i+1, width = math.floor(root.winfo_width()/len(indices)), anchor = 'c')
         tree.heading(i+1,text = keys[indices[i]])
-
+    
     c = count_list[nindex]
-    print(c)
+    a = pdp[nindex][2:c+2][:]
+    # print(shape(a))
+    a = a[a[:,2].argsort()]
+    # print(shape(a))
+
+
+    
+    # print(a)
     for i in range(c):
         row = list()
+        # print(a[i])
         for j in range(len(indices)):
-            data = pdp[nindex][2+i][indices[j]]
-            if indices[j]:
+            # print(a[i][indices[j]])
+            data =a[i][indices[j]]
+            if indices[j]==1:
                 data = data[:10]    #Time Setting
-            row.append(data)
+            row.append(data.upper())
         tree.insert("",'end',values=row)
 
     
     treescroll.pack(side="right", fill="y")
     tree.pack(expand=True, fill="both")
+
+
+    graphs = ttk.Frame(resnb)
+    graphs.pack()
+    resnb.add(graphs,text="Graphs")
+    
+
+    date = []
+    d = pdp[nindex]
+    tsales = []
+    for i in range(2,c+2):
+        pdp[nindex][i][1] = d[i][1][:6]
+        sale = int(d[i][6].split('.')[0])
+        if d[i][1][:10] not in date:
+            date.append( d[i][1][:6])
+            tsales.append(sale)
+        else:
+            n = date.index(d[i][1][:6])
+            tsales[n]+=sale
+    print(tsales)
+        
+    # print(date)
+
+    fig  =Figure(figsize = (10,10),dpi=100)
+    plot1 = fig.add_subplot(111)
+    plot1.plot(date,tsales)
+
+    c1 = FigureCanvasTkAgg(fig, master=graphs)
+    c1.draw()
+
+    c1.get_tk_widget().pack()
+    toolbar = NavigationToolbar2Tk(c1,
+                                   graphs)
+    toolbar.update()
+  
+    # placing the toolbar on the Tkinter window
+    c1.get_tk_widget().pack()
+
+
+
 
 
 
