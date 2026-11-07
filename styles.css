@@ -449,7 +449,9 @@ h3 {
 
 .title-word .title-letter:first-child {
   color: #0000fe;
-  -webkit-text-fill-color: #0000fe;
+  -webkit-text-stroke: 4px var(--red);
+  paint-order: stroke fill;
+  /* -webkit-text-fill-color: #0000fe; */
 }
 
 .js .title-banner .title-word {
